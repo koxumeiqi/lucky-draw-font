@@ -1,11 +1,11 @@
 <template>
   <div>
     <el-container>
-      <el-header class="myheader">
+      <el-header class="myheader" style="margin:0;padding:0;">
         <DrawHeaderComponent/>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="200px" style="margin:0;padding:0;">
           <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
             <el-radio-button :value="false">展开</el-radio-button>
             <el-radio-button :value="true">关闭</el-radio-button>
@@ -16,8 +16,6 @@
             class="el-menu-vertical-demo"
             default-active="1"
             text-color="#5b4f4b"
-            @open="handleOpen"
-            @close="handleClose"
             router="true"
           >
             <el-menu-item index="/nineDraw" style="margin-top: 10px">
@@ -42,7 +40,7 @@
             </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main>
+        <el-main style="margin:0;padding:0;">
           <!-- 路由出口 -->
           <!-- 这里将会显示当前路由对应的组件内容 -->
           <router-view></router-view>
@@ -55,15 +53,9 @@
 <script setup>
 // @ is an alias to /src
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import DrawHeaderComponent from '@/components/header/DrawHeaderComponent.vue'
 
 const isCollapse = ref(false)
-const router = useRouter()
-
-function routerLink (toPath) {
-  router.push(toPath)
-}
 
 </script>
 

@@ -10,6 +10,7 @@ body {
 
   &::-webkit-scrollbar {
     width: 5px; /* 滚动条的宽度 */
+    height: 5px;
   }
 
   /* 定义滚动条轨道的样式 */
