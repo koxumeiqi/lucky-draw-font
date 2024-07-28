@@ -36,6 +36,10 @@
               <svg-icon icon-class="raffleBox"></svg-icon>&nbsp;
               <template #title>抽奖箱</template>
             </el-menu-item>
+            <el-menu-item index="/integralMallView" style="margin-top: 15px">
+              <svg-icon icon-class="integralMall"></svg-icon>&nbsp;
+              <template #title>积分商城</template>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main>

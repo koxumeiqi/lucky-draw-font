@@ -26,7 +26,11 @@ const routes = [
         path: '/raffleBox',
         name: 'raffleBox',
         component: () => import('../views/RaffleBoxView.vue')
-      },
+      }, {
+        path: '/integralMallView',
+        name: 'integralMallView',
+        component: () => import('../views/IntegralMallView.vue')
+      }
     ]
   }
 ]
