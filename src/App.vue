@@ -7,6 +7,8 @@ body {
   /* ... 其他样式 ... */
 
   /* 定义滚动条的整体样式 */
+  margin: 0;
+  padding: 0;
 
   &::-webkit-scrollbar {
     width: 5px; /* 滚动条的宽度 */

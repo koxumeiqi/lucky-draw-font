@@ -14,11 +14,11 @@
             active-text-color="#7b1aab"
             :collapse="isCollapse"
             class="el-menu-vertical-demo"
-            default-active="1"
+            default-active="/"
             text-color="#5b4f4b"
             router="true"
           >
-            <el-menu-item index="/nineDraw" style="margin-top: 10px">
+            <el-menu-item index="/" style="margin-top: 10px">
               <svg-icon icon-class="nineDraw"></svg-icon>&nbsp;
               <template #title>九宫格抽奖</template>
             </el-menu-item>

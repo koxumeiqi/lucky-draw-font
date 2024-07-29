@@ -1,11 +1,11 @@
 <template>
   <div class="center-container">
-    <div class="drawContent-container">
-      <span class="remainTimesClass">
-        抽奖剩余次数：
-        <span style="font-weight: bold;color: darkgoldenrod">{{ remainTimes }}</span>
-      </span>
-    </div>
+    <!--    <div class="drawContent-container">
+          <span class="remainTimesClass">
+            抽奖剩余次数：
+            <span style="font-weight: bold;color: darkgoldenrod">{{ remainTimes }}</span>
+          </span>
+        </div>-->
     <div class="nineDraw-container">
       <LuckyGrid
         ref="myLucky"
@@ -258,6 +258,7 @@ export default {
       // 模拟调用接口异步抽奖
       setTimeout(() => {
         // 假设后端返回的中奖索引是0
+        // todo 抽奖接口
         const index = this.randomRaffleHandle()
         // 调用stop停止旋转并传递中奖索引
         this.$refs.myLucky.stop(index)
@@ -267,7 +268,9 @@ export default {
     endCallback (prize) {
       // 加载数据
       // 展示奖品
+      // todo 获取奖品信息
       this.queryRaffleAwardListHandle()
+      // todo 抽奖完发送事件，更新抽奖额度、抽奖分数
       this.remainTimes = this.queryRemainTImes()
       // this.buttons[0].fonts[0] = { text: `剩余次数${this.remainTimes}` }
       alert('恭喜抽中奖品💐【' + prize.fonts[0].text + '】')
@@ -300,8 +303,11 @@ export default {
 
 .nineDraw-container {
   /* 使内部元素水平和垂直居中 */
+  margin: 0;
   display: flex;
   justify-content: center;
+  align-items: center;
+  padding-top: 120px;
 }
 
 .drawContent-container {
@@ -312,7 +318,7 @@ export default {
   padding-bottom: 25px;
 }
 
-.awardContent-container{
+.awardContent-container {
   /* 使内部元素水平和垂直居中 */
   display: flex;
   justify-content: center;

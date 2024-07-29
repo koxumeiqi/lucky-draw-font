@@ -8,7 +8,7 @@ const routes = [
     component: HomeView,
     children: [
       {
-        path: '/nineDraw',
+        path: '/',
         name: 'nineDraw',
         component: () => import('../views/NineDrawView.vue')
       },
