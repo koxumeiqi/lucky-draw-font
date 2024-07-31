@@ -48,6 +48,9 @@
 
 <script>
 
+import { draw, queryRaffleAwardList } from '@/apis/api'
+import { events } from '@/utils/bus.js'
+
 export default {
   data () {
     return {
@@ -110,10 +113,10 @@ export default {
         }
       ],
       remainTimes: 3,
-      defaultStyle: { background: '#b8c5f2' },
+      defaultStyle: { background: '#4f1e8a' },
       activedStyle: {
-        fontColor: 'darkorange',
-        fontSize: '24px'
+        fontColor: 'pink',
+        fontSize: '10px'
       },
       prizes: [
         {
@@ -249,8 +252,30 @@ export default {
   },
   mounted () {
     this.classOptions.limitMoveNum = this.awardList.length
+    this.initPrize()
   },
   methods: {
+    async initPrize () {
+      const {
+        userid,
+        activityId
+      } = JSON.parse(sessionStorage.getItem('drawContext'))
+      const result = await queryRaffleAwardList(userid, activityId)
+      const {
+        code,
+        info,
+        data
+      } = await result.data
+      if (code !== '0000') {
+        window.alert('获取到奖品信息失败 code:' + code + ' info:' + info)
+      }
+      // 遍历prizes
+      for (let i = 0; i < this.prizes.length; i = i + 1) {
+        if (data[i]) {
+          this.prizes[i].fonts[0].text = data[i].awardTitle
+        }
+      }
+    },
     // 点击抽奖按钮会触发star回调
     startCallback () {
       // 调用抽奖组件的play方法开始游戏
@@ -259,25 +284,43 @@ export default {
       setTimeout(() => {
         // 假设后端返回的中奖索引是0
         // todo 抽奖接口
-        const index = this.randomRaffleHandle()
-        // 调用stop停止旋转并传递中奖索引
-        this.$refs.myLucky.stop(index)
+        this.randomRaffleHandle().then(prizeIndex => {
+          // 调用stop停止旋转并传递中奖索引
+          this.$refs.myLucky.stop(prizeIndex)
+        }
+        )
       }, 2000)
     },
     // 抽奖结束会触发end回调
     endCallback (prize) {
+      // 发送抽奖事件
+      events.emit('drawOverEvent', prize)
       // 加载数据
       // 展示奖品
       // todo 获取奖品信息
       this.queryRaffleAwardListHandle()
       // todo 抽奖完发送事件，更新抽奖额度、抽奖分数
       this.remainTimes = this.queryRemainTImes()
-      // this.buttons[0].fonts[0] = { text: `剩余次数${this.remainTimes}` }
       alert('恭喜抽中奖品💐【' + prize.fonts[0].text + '】')
     },
-    randomRaffleHandle () {
-      const prizeIndex = Math.floor(Math.random() * 8)
-      return prizeIndex
+    async randomRaffleHandle () {
+      const {
+        userid,
+        activityId
+      } = JSON.parse(sessionStorage.getItem('drawContext'))
+      const result = await draw(userid, activityId)
+      const {
+        code,
+        info,
+        data
+      } = await result.data
+      if (code !== '0000') {
+        window.alert('随机抽奖失败 code:' + code + ' info:' + info)
+        return
+      }
+      console.log('抽奖结果信息：', JSON.stringify(data))
+      // 为了方便测试，mock 的接口直接返回 awardIndex 也就是奖品列表中第几个奖品。
+      return data.awardIndex - 1
     },
     queryRaffleAwardListHandle () {
       console.log('奖品列表发生了变更')

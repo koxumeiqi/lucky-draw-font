@@ -7,6 +7,8 @@ import svgIcon from '@/components/svgIcon/index.vue'
 import VueLuckyCanvas from '@lucky-canvas/vue'
 import { vue3ScrollSeamless } from 'vue3-scroll-seamless'
 import '@/icons'
+import axios from "axios";
+
 
 createApp(App).use(router)
   .use(ElementPlus)

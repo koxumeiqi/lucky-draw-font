@@ -15,13 +15,13 @@
           <el-form-item label="用户ID" :label-width="formLabelWidth" prop="userid">
             <el-input v-model="form.userid" autocomplete="off"/>
           </el-form-item>
-          <el-form-item label="抽奖策略" :label-width="formLabelWidth" prop="strategyId">
-            <el-select v-model="form.strategyId" placeholder="抽奖策略选择" style="width: 240px">
+          <el-form-item label="抽奖策略" :label-width="formLabelWidth" prop="activityId">
+            <el-select v-model="form.activityId" placeholder="抽奖策略选择" style="width: 240px">
               <el-option
                 v-for="item in strategyList"
                 :key="item.value"
-                :label="item.strategyDesc"
-                :value="item.strategyId"
+                :label="item.activityDesc"
+                :value="item.activityId"
                 :disabled="item.disabled"
               />
             </el-select>
@@ -71,8 +71,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
 import { ElMessage } from 'element-plus'
+import { events } from '@/utils/bus.js'
 
 const integralNum = ref(0)
 const signInRes = ref('签到')
@@ -82,8 +83,8 @@ const formLabelWidth = '140px'
 const remainTimes = ref(3)
 const strategyList = ref([
   {
-    strategyDesc: '哈哈哈哈',
-    strategyId: 1
+    activityDesc: '哈哈哈哈',
+    activityId: 100301
   }
 ])
 
@@ -96,7 +97,7 @@ const rules = ref({
       trigger: 'blur'
     }
   ],
-  strategyId: [
+  activityId: [
     {
       required: true,
       message: '请选择抽奖策略',
@@ -107,15 +108,22 @@ const rules = ref({
 
 const form = ref({
   userid: '',
-  strategyId: ''
+  activityId: ''
+})
+
+onBeforeMount(() => {
+  events.on('drawOverEvent', (prize) => {
+    console.log('触发了抽奖结束事件，抽奖结果：', prize)
+    // todo 更新抽奖额度、抽奖积分
+  })
 })
 
 onMounted(() => {
   // todo 请求获取抽奖策略列表
   form.value.userid = 'myz'
-  form.value.strategyId = 1
-  localStorage.setItem('drawContext', JSON.stringify(form.value))
-  console.log('上下文信息：', localStorage.getItem('drawContext'))
+  form.value.activityId = 100301
+  sessionStorage.setItem('drawContext', JSON.stringify(form.value))
+  console.log('上下文信息：', sessionStorage.getItem('drawContext'))
   // todo 获取用户积分信息
   // todo 获取用户抽奖额度
 })
@@ -131,10 +139,10 @@ function dialogFormConfirm () {
       // 这里可以放置提交表单的逻辑
       dialogFormVisible.value = false
       // 放入到本地存储中
-      localStorage.setItem('drawContext', JSON.stringify(form.value))
-      console.log('上下文信息：', localStorage.getItem('drawContext'))
+      sessionStorage.setItem('drawContext', JSON.stringify(form.value))
+      console.log('上下文信息：', sessionStorage.getItem('drawContext'))
       console.log('用户id存入了Session缓存中:', form.value.userid)
-      console.log('抽奖策略id存入了Session缓存中:', form.value.strategyId)
+      console.log('抽奖策略id存入了Session缓存中:', form.value.activityId)
       // todo 发送信息变更事件，去更新奖品列表
     } else {
       // 如果校验失败，不执行任何操作，Element Plus会自动显示错误提示
