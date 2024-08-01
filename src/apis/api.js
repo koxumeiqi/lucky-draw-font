@@ -34,3 +34,57 @@ export function queryRaffleAwardList (userId, activityId) {
     }
   })
 }
+
+/**
+ * 获取抽奖活动下拉框列表
+ */
+export function queryActivityList () {
+  return request({
+    url: '/api/v1/raffle/activity/query_activity_list',
+    method: 'GET'
+  })
+}
+
+/**
+ * 查询用户的抽奖账户余额
+ */
+export function queryUserCurAccount (userId, activityId) {
+  return request({
+    url: '/api/v1/raffle/activity/query_user_activity_account',
+    method: 'POST',
+    data: {
+      userId: userId,
+      activityId: activityId
+    }
+  })
+}
+
+/**
+ * 查询用户的积分额度
+ */
+export function queryUserIntegral (userId) {
+  return request({
+    url: `/api/v1/raffle/activity/query_user_credit_account?userId=${userId}`,
+    method: 'POST'
+  })
+}
+
+/**
+ * 签到
+ */
+export function signInToday (userId) {
+  return request({
+    url: `/api/v1/raffle/activity/calendar_sign_rebate?userId=${userId}`,
+    method: 'POST'
+  })
+}
+
+/**
+ * 查看是否签到
+ */
+export function isSignInToday (userId) {
+  return request({
+    url: `/api/v1/raffle/activity/is_calendar_sign_rebate?userId=${userId}`,
+    method: 'POST'
+  })
+}

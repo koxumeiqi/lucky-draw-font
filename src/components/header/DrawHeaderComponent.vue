@@ -18,9 +18,9 @@
           <el-form-item label="抽奖策略" :label-width="formLabelWidth" prop="activityId">
             <el-select v-model="form.activityId" placeholder="抽奖策略选择" style="width: 240px">
               <el-option
-                v-for="item in strategyList"
+                v-for="item in activityList"
                 :key="item.value"
-                :label="item.activityDesc"
+                :label="item.activityName"
                 :value="item.activityId"
                 :disabled="item.disabled"
               />
@@ -37,28 +37,28 @@
         </template>
       </el-dialog>
     </el-col>
-    <el-col :span="5" class="headerCol2">
-    </el-col>
     <el-col :span="2" class="headerCol2">
+    </el-col>
+    <el-col :span="3" class="headerCol2">
       <span class="integralClass">
         用户ID：{{ form.userid }}
       </span>
     </el-col>
-    <el-col :span="2" class="headerCol2">
+    <el-col :span="3" class="headerCol2">
       <span class="integralClass">
         抽奖额度：{{ remainTimes }}
       </span>
     </el-col>
-    <el-col :span="2" class="headerCol2">
+    <el-col :span="3" class="headerCol2">
       <span class="integralClass">
         积分值：{{ integralNum }}
       </span>
     </el-col>
     <el-col :span="2" class="headerCol2">
       <span class="signInClass">
-        <el-button :disabled="signInRes === '已签到'" :color="signButtonColor" size="large" @click="signIn"
+        <el-button :disabled="signInRes" :color="signButtonColor" size="large" @click="signIn"
                    round>
-          {{ signInRes }}
+          {{ signInRes ? '已签到' : '签到' }}
         </el-button>
       </span>
     </el-col>
@@ -74,16 +74,17 @@
 import { ref, onMounted, onBeforeMount } from 'vue'
 import { ElMessage } from 'element-plus'
 import { events } from '@/utils/bus.js'
+import { queryActivityList, queryUserCurAccount, queryUserIntegral, signInToday, isSignInToday } from '@/apis/api'
 
 const integralNum = ref(0)
-const signInRes = ref('签到')
+const signInRes = ref(false)
 const signButtonColor = ref('pink')
 const dialogFormVisible = ref(false)
 const formLabelWidth = '140px'
 const remainTimes = ref(3)
-const strategyList = ref([
+const activityList = ref([
   {
-    activityDesc: '哈哈哈哈',
+    activityName: '哈哈哈哈',
     activityId: 100301
   }
 ])
@@ -114,19 +115,53 @@ const form = ref({
 onBeforeMount(() => {
   events.on('drawOverEvent', (prize) => {
     console.log('触发了抽奖结束事件，抽奖结果：', prize)
-    // todo 更新抽奖额度、抽奖积分
+    // 更新抽奖额度、抽奖积分
+    flushRightNow()
   })
 })
 
 onMounted(() => {
-  // todo 请求获取抽奖策略列表
+  // 填充默认上下文信息，防止不知道使用者，啥信息看不着
   form.value.userid = 'myz'
   form.value.activityId = 100301
   sessionStorage.setItem('drawContext', JSON.stringify(form.value))
   console.log('上下文信息：', sessionStorage.getItem('drawContext'))
-  // todo 获取用户积分信息
-  // todo 获取用户抽奖额度
+  // 请求获取抽奖策略列表
+  initRaffleActivityList()
+  // 先查询是否可以签到
+  queryIsSignInToday()
+  flushRightNow()
+  openDecideIsSignIn()
 })
+
+/**
+ * 10s轮询查看是否签到了
+ */
+function openDecideIsSignIn () {
+  setInterval(async () => {
+    queryIsSignInToday()
+    flushRightNow()
+  }, 10000)
+}
+
+/**
+ * 获取抽奖策略列表
+ * @returns {Promise<void>}
+ */
+async function initRaffleActivityList () {
+  const activityListRes = await queryActivityList()
+  const {
+    code,
+    info,
+    data
+  } = await activityListRes.data
+  if (code !== '0000') {
+    window.alert('获取抽奖活动列表失败 code:' + code + ' info:' + info)
+    return
+  }
+  activityList.value = data
+  console.log('抽奖策略列表：', JSON.stringify(activityList.value))
+}
 
 function dialogFormCancel () {
   dialogFormVisible.value = false
@@ -152,10 +187,67 @@ function dialogFormConfirm () {
   })
 }
 
-function signIn () {
-  // todo 签到，刷新信息
-  signInRes.value = '已签到'
+async function signIn () {
+  // 签到，刷新信息
+  const signInResult = await signInToday(form.value.userid)
+  const {
+    code,
+    info,
+    data
+  } = await signInResult.data
+  if (code !== '0000' || data !== true) {
+    window.alert('签到失败 code:' + code + ' info:' + info)
+    return
+  }
+  signInRes.value = true
+  if (signInRes.value) {
+    signButtonColor.value = 'green'
+  } else {
+    signButtonColor.value = 'pink'
+  }
   console.log('签到')
+  flushRightNow()
+}
+
+async function queryIsSignInToday () {
+  const isSignInResult = await isSignInToday(form.value.userid)
+  const {
+    code,
+    info,
+    data
+  } = await isSignInResult.data
+  if (code !== '0000') {
+    window.alert('查询签到状态失败 code:' + code + ' info:' + info)
+    return
+  }
+  signInRes.value = data
+  console.log('签到状态：', signInRes.value)
+  if (signInRes.value) {
+    signButtonColor.value = 'green'
+  } else {
+    signButtonColor.value = 'pink'
+  }
+}
+
+async function flushRightNow () {
+  console.log('刷新')
+  // 获取用户抽奖额度
+  const userCurAccountRes = await queryUserCurAccount(form.value.userid, form.value.activityId)
+  const userCurAccountData = await userCurAccountRes.data
+  if (userCurAccountData.code !== '0000') {
+    window.alert('获取用户抽奖额度失败 code:' + userCurAccountData.code + ' info:' + userCurAccountData.info)
+    return
+  }
+  remainTimes.value = userCurAccountData.data.totalCountSurplus
+  // 获取用户积分信息
+  const userIntegralRes = await queryUserIntegral(form.value.userid)
+  const userIntegralData = await userIntegralRes.data
+  if (userIntegralData.code !== '0000') {
+    window.alert('获取用户积分信息失败 code:' + userIntegralData.code + ' info:' + userIntegralData.info)
+    return
+  }
+  integralNum.value = userIntegralData.data
+  console.log('刷新用户抽奖额度和积分值', '抽奖额度：', remainTimes.value, '积分值：', integralNum.value)
 }
 
 </script>

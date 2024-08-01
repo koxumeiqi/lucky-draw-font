@@ -247,7 +247,8 @@ export default {
             activeSrc: 'raffle-award-10.png'
           }]
         }
-      ]
+      ],
+      flagEmit: false// 用来判断是否发了抽奖结束事件的
     }
   },
   mounted () {
@@ -283,9 +284,14 @@ export default {
       // 模拟调用接口异步抽奖
       setTimeout(() => {
         // 假设后端返回的中奖索引是0
-        // todo 抽奖接口
+        // 抽奖接口
         this.randomRaffleHandle().then(prizeIndex => {
           // 调用stop停止旋转并传递中奖索引
+          // 发送抽奖事件
+          if (!this.flagEmit) {
+            events.emit('drawOverEvent', prizeIndex)
+            this.flagEmit = true
+          }
           this.$refs.myLucky.stop(prizeIndex)
         }
         )
@@ -293,14 +299,13 @@ export default {
     },
     // 抽奖结束会触发end回调
     endCallback (prize) {
-      // 发送抽奖事件
-      events.emit('drawOverEvent', prize)
       // 加载数据
       // 展示奖品
       // todo 获取奖品信息
       this.queryRaffleAwardListHandle()
-      // todo 抽奖完发送事件，更新抽奖额度、抽奖分数
+      // 抽奖完发送事件，更新抽奖额度、抽奖分数
       this.remainTimes = this.queryRemainTImes()
+      this.flagEmit = false
       alert('恭喜抽中奖品💐【' + prize.fonts[0].text + '】')
     },
     async randomRaffleHandle () {
