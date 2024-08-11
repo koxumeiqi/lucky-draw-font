@@ -88,3 +88,16 @@ export function isSignInToday (userId) {
     method: 'POST'
   })
 }
+
+/**
+ * 获取奖品信息
+ */
+export function queryActivityAwards (activityId) {
+  return request({
+    url: '/api/v1/raffle/activity/query_all_activity_awards',
+    method: 'POST',
+    data: {
+      activityId: activityId
+    }
+  })
+}

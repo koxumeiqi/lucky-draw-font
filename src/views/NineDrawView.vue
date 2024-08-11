@@ -7,19 +7,21 @@
           </span>
         </div>-->
     <div class="nineDraw-container">
-      <LuckyGrid
-        ref="myLucky"
-        width="300px"
-        height="300px"
-        rows="3"
-        cols="3"
-        :prizes="prizes"
-        :default-style="defaultStyle"
-        :active-style="activedStyle"
-        :buttons="buttons"
-        @start="startCallback"
-        @end="endCallback"
-      />
+      <div>
+        <LuckyGrid
+          ref="myLucky"
+          width="300px"
+          height="300px"
+          rows="3"
+          cols="3"
+          :prizes="prizes"
+          :default-style="defaultStyle"
+          :active-style="activedStyle"
+          :buttons="buttons"
+          @start="startCallback"
+          @end="endCallback"
+        />
+      </div>
     </div>
     <div class="awardContent-container">
       <span class="remainTimesClass">
@@ -34,7 +36,15 @@
       >
         <ul class="ui-wrap">
           <li class="li-item" v-for="(item,i) of awardList" :key="i">
-            <p>用户ID为{{ item.userId }}在{{ item.drawTime }}抽到{{ item.awardName }}</p>
+            <p>用户ID为
+              <span style="color: orangered">{{ item.userId }}</span>
+              在
+              {{ item.awardTime }}
+              抽到
+              <span style="color: orangered">{{
+                  item.awardTitle
+                }}</span>
+              ,奖品{{ item.awardStateDesc }}</p>
           </li>
           <li v-if="awardList.length == 0"
               style="width: 100%;height: 100px;display: flex;justify-content: center;align-items: center;color: white;font-size: 18px;">
@@ -48,54 +58,13 @@
 
 <script>
 
-import { draw, queryRaffleAwardList } from '@/apis/api'
+import { draw, queryRaffleAwardList, queryActivityAwards } from '@/apis/api'
 import { events } from '@/utils/bus.js'
 
 export default {
   data () {
     return {
-      awardList: [
-        {
-          userId: 'G1234',
-          awardName: '北京南',
-          drawTime: '09:00'
-        },
-        {
-          userId: 'G5678',
-          awardName: '上海虹桥',
-          drawTime: '09:15'
-        },
-        {
-          userId: 'D4321',
-          awardName: '广州南',
-          drawTime: '09:30'
-        },
-        {
-          userId: 'G8765',
-          awardName: '成都东',
-          drawTime: '09:45'
-        },
-        {
-          userId: 'G9876',
-          awardName: '西安北',
-          drawTime: '10:00'
-        },
-        {
-          userId: 'D6543',
-          awardName: '深圳北',
-          drawTime: '10:15'
-        },
-        {
-          userId: 'G2345',
-          awardName: '重庆北',
-          drawTime: '10:30'
-        },
-        {
-          userId: 'G1111',
-          awardName: '天津西',
-          drawTime: '10:45'
-        }
-      ],
+      awardList: [],
       classOptions: {
         step: 0.5,
         direction: 1
@@ -252,10 +221,27 @@ export default {
     }
   },
   mounted () {
-    this.classOptions.limitMoveNum = this.awardList.length
     this.initPrize()
+    this.initActivityAwards()
+    this.classOptions.limitMoveNum = this.awardList.length
   },
   methods: {
+    async initActivityAwards () {
+      const {
+        activityId
+      } = JSON.parse(sessionStorage.getItem('drawContext'))
+      const result = await queryActivityAwards(activityId)
+      const {
+        code,
+        info,
+        data
+      } = await result.data
+      if (code !== '0000') {
+        window.alert('获取到奖品结果信息失败 code:' + code + ' info:' + info)
+      }
+      this.awardList = data
+      console.log('获取到奖品结果信息成功 ', JSON.stringify(this.awardList))
+    },
     async initPrize () {
       const {
         userid,
@@ -393,9 +379,9 @@ export default {
 
 .scroll-wrap {
   height: 180px;
-  width: 300px;
+  width: 450px;
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 5px;
   overflow: hidden;
   background-color: rgba(241, 217, 128, 0.5);
 }
@@ -421,6 +407,14 @@ export default {
   width: 100%;
   text-align: center;
   font-size: small;
+}
+
+.demo-progress .el-progress--line {
+  margin-bottom: 15px;
+  max-width: 600px;
+}
+.demo-progress .el-progress--circle {
+  margin-right: 15px;
 }
 
 </style>
