@@ -118,6 +118,11 @@ onBeforeMount(() => {
     // 更新抽奖额度、抽奖积分
     flushRightNow()
   })
+  events.on('integralGetProductEvent', (x) => {
+    console.log('触发了积分兑换商品事件：', x)
+    // 更新抽奖额度、抽奖积分
+    flushRightNow()
+  })
 })
 
 onMounted(() => {

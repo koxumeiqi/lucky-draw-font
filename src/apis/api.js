@@ -119,10 +119,7 @@ export function querySkuProductListByActivityId (activityId) {
 export function creditPayExchangeSku (userId, sku) {
   return request('/api/v1/raffle/activity/credit_pay_exchange_sku', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8'
-    },
-    body: {
+    data: {
       userId: userId,
       sku: sku
     }

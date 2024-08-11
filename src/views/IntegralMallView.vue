@@ -44,6 +44,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { creditPayExchangeSku, querySkuProductListByActivityId } from '@/apis/api'
+import { events } from '@/utils/bus'
 
 const skuProductResponseDTOList = ref([])
 
@@ -83,7 +84,8 @@ const creditPayExchangeSkuHandle = async (sku) => {
   if (code !== '0000') {
     window.alert('对话抽奖次数，接口调用失败 code:' + code + ' info:' + info)
   }
-  // todo 发送积分兑换商品事件
+  // 发送积分兑换商品事件
+  events.emit('integralGetProductEvent')
 }
 
 </script>
