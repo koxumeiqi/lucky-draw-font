@@ -178,7 +178,9 @@ function dialogFormConfirm () {
       console.log('上下文信息：', sessionStorage.getItem('drawContext'))
       console.log('用户id存入了Session缓存中:', form.value.userid)
       console.log('抽奖策略id存入了Session缓存中:', form.value.activityId)
-      // todo 发送信息变更事件，去更新奖品列表
+      // 发送信息变更事件，去更新奖品列表
+      events.emit('contextInfoUpdateEvent')
+      flushRightNow()
     } else {
       // 如果校验失败，不执行任何操作，Element Plus会自动显示错误提示
       ElMessage.error('请检查输入的内容是否输入完整')

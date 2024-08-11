@@ -220,6 +220,12 @@ export default {
       flagEmit: false// 用来判断是否发了抽奖结束事件的
     }
   },
+  beforeMount () {
+    events.on('contextInfoUpdateEvent', (x) => {
+      console.log('触发了上下文信息变更事件：', x)
+      this.initActivityAwards()
+    })
+  },
   mounted () {
     this.initPrize()
     this.initActivityAwards()
@@ -287,7 +293,7 @@ export default {
     endCallback (prize) {
       // 加载数据
       // 展示奖品
-      // todo 获取奖品信息
+      // 获取奖品信息
       this.queryRaffleAwardListHandle()
       // 抽奖完发送事件，更新抽奖额度、抽奖分数
       this.remainTimes = this.queryRemainTImes()
@@ -315,6 +321,7 @@ export default {
     },
     queryRaffleAwardListHandle () {
       console.log('奖品列表发生了变更')
+      this.initActivityAwards()
     },
     queryRemainTImes () {
       this.remainTimes -= 1
