@@ -101,3 +101,30 @@ export function queryActivityAwards (activityId) {
     }
   })
 }
+
+/**
+ * 获取商品信息
+ * @param activityId
+ */
+export function querySkuProductListByActivityId (activityId) {
+  return request(`/api/v1/raffle/activity/query_sku_product_list_by_activity_id?activityId=${activityId}`, {
+    method: 'POST'
+  })
+}
+
+/**
+ * 积分兑换商品
+ * @param userId
+ */
+export function creditPayExchangeSku (userId, sku) {
+  return request('/api/v1/raffle/activity/credit_pay_exchange_sku', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: {
+      userId: userId,
+      sku: sku
+    }
+  })
+}
