@@ -22,6 +22,9 @@
           @end="endCallback"
         />
       </div>
+      <div>
+        <StrategyRuleWeight/>
+      </div>
     </div>
     <div class="awardContent-container">
       <span class="remainTimesClass">
@@ -60,8 +63,10 @@
 
 import { draw, queryRaffleAwardList, queryActivityAwards } from '@/apis/api'
 import { events } from '@/utils/bus.js'
+import StrategyRuleWeight from '@/components/ruleWeight/StrategyRuleWeight.vue'
 
 export default {
+  components: { StrategyRuleWeight },
   data () {
     return {
       awardList: [],

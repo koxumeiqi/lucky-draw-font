@@ -125,3 +125,17 @@ export function creditPayExchangeSku (userId, sku) {
     }
   })
 }
+
+/**
+ * 查询权重规则
+ * @param userId
+ */
+export function queryRaffleStrategyRuleWeight (userId, activityId) {
+  return request('/api/v1/raffle/strategy/query_raffle_strategy_rule_weight', {
+    method: 'POST',
+    data: {
+      userId: userId,
+      activityId: activityId
+    }
+  })
+}

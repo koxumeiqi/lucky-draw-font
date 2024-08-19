@@ -5,7 +5,7 @@
         <DrawHeaderComponent/>
       </el-header>
       <el-container>
-        <el-aside width="180px" style="margin:0;padding:0;background-color: azure">
+        <el-aside width="200px" style="margin:0;padding:0;background-color: azure">
           <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;margin-left: 25px">
             <el-radio-button :value="false">展开</el-radio-button>
             <el-radio-button :value="true">关闭</el-radio-button>
