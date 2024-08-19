@@ -5,8 +5,8 @@
         <DrawHeaderComponent/>
       </el-header>
       <el-container>
-        <el-aside width="200px" style="margin:0;padding:0;">
-          <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
+        <el-aside width="180px" style="margin:0;padding:0;background-color: azure">
+          <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;margin-left: 25px">
             <el-radio-button :value="false">展开</el-radio-button>
             <el-radio-button :value="true">关闭</el-radio-button>
           </el-radio-group>
@@ -14,6 +14,7 @@
             active-text-color="#7b1aab"
             :collapse="isCollapse"
             class="el-menu-vertical-demo"
+            background-color="azure"
             default-active="/"
             text-color="#5b4f4b"
             router="true"
@@ -22,17 +23,13 @@
               <svg-icon icon-class="nineDraw"></svg-icon>&nbsp;
               <template #title>九宫格抽奖</template>
             </el-menu-item>
-            <el-menu-item index="/scratchOffDraw" style="margin-top: 15px">
-              <svg-icon icon-class="scratchOff"></svg-icon>&nbsp;
-              <template #title>刮刮乐抽奖</template>
+            <el-menu-item index="/raffleBox" style="margin-top: 15px">
+              <svg-icon icon-class="raffleBox"></svg-icon>&nbsp;
+              <template #title>抽奖箱</template>
             </el-menu-item>
             <el-menu-item index="/luckyWheelDraw" style="margin-top: 15px">
               <svg-icon icon-class="bigWheel"></svg-icon>&nbsp;
               <template #title>幸运大转盘</template>
-            </el-menu-item>
-            <el-menu-item index="/raffleBox" style="margin-top: 15px">
-              <svg-icon icon-class="raffleBox"></svg-icon>&nbsp;
-              <template #title>抽奖箱</template>
             </el-menu-item>
             <el-menu-item index="/integralMallView" style="margin-top: 15px">
               <svg-icon icon-class="integralMall"></svg-icon>&nbsp;

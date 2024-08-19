@@ -13,11 +13,6 @@ const routes = [
         component: () => import('../views/NineDrawView.vue')
       },
       {
-        path: '/scratchOffDraw',
-        name: 'scratchOffDraw',
-        component: () => import('../views/ScratchOffDrawView.vue')
-      },
-      {
         path: '/luckyWheelDraw',
         name: 'luckyWheelDraw',
         component: () => import('../views/LuckyWheelDrawView.vue')
