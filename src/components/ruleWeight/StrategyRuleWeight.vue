@@ -24,10 +24,18 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { queryRaffleStrategyRuleWeight } from '@/apis/api'
+import { events } from '@/utils/bus'
 
 const strategyRuleWeightVOList = ref([])
+
+onBeforeMount(() => {
+  events.on('strategyRuleWeightRefresh', (x) => {
+    console.log('触发了权重刷新事件：', x)
+    initStrategyRuleWeightVOList()
+  })
+})
 
 onMounted(() => {
   initStrategyRuleWeightVOList()

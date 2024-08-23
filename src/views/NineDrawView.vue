@@ -287,6 +287,7 @@ export default {
           // 发送抽奖事件
           if (!this.flagEmit) {
             events.emit('drawOverEvent', prizeIndex)
+            events.emit('strategyRuleWeightRefresh', prizeIndex)
             this.flagEmit = true
           }
           this.$refs.myLucky.stop(prizeIndex)
