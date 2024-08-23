@@ -6,7 +6,8 @@ import { ElMessage } from 'element-plus'
 const service = axios.create({
   // 公共接口--这里注意后面会讲
   // baseURL: process.env.BASE_API,
-  baseURL: 'http://localhost:8091/',
+  baseURL: 'http://116.198.228.76:8080/',
+  // baseURL: 'http://localhost:8091/',
   // 超时时间 单位是ms，这里设置了3s的超时时间
   timeout: 3 * 1000
 })
