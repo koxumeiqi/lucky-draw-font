@@ -142,7 +142,7 @@ export default {
           }]
         },
         {
-          x: 0,
+          x: 2,
           y: 1,
           fonts: [{
             text: '4',
@@ -159,7 +159,7 @@ export default {
         },
         {
           x: 2,
-          y: 1,
+          y: 2,
           fonts: [{
             text: '5',
             top: '80%',
@@ -174,7 +174,7 @@ export default {
           }]
         },
         {
-          x: 0,
+          x: 1,
           y: 2,
           fonts: [{
             text: '6',
@@ -190,7 +190,7 @@ export default {
           }]
         },
         {
-          x: 1,
+          x: 0,
           y: 2,
           fonts: [{
             text: '7',
@@ -206,8 +206,8 @@ export default {
           }]
         },
         {
-          x: 2,
-          y: 2,
+          x: 0,
+          y: 1,
           fonts: [{
             text: '8',
             top: '80%',
@@ -273,6 +273,18 @@ export default {
           this.prizes[i].fonts[0].text = data[i].awardTitle
         }
       }
+      if (data[4]) {
+        this.prizes[4].fonts[0].text = data[4].isAwardUnlock ? data[4].awardTitle : '再抽奖' + data[4].waitUnLockCount + '次解锁'
+        this.prizes[4].imgs[0].src = data[4].isAwardUnlock ? 'raffle-award-22.png' : 'raffle-award-22-lock.png'
+      }
+      if (data[5]) {
+        this.prizes[5].fonts[0].text = data[5].isAwardUnlock ? data[5].awardTitle : '再抽奖' + data[5].waitUnLockCount + '次解锁'
+        this.prizes[5].imgs[0].src = data[5].isAwardUnlock ? 'raffle-award-21.png' : 'raffle-award-21-lock.png'
+      }
+      if (data[6]) {
+        this.prizes[6].fonts[0].text = data[6].isAwardUnlock ? data[6].awardTitle : '再抽奖' + data[6].waitUnLockCount + '次解锁'
+        this.prizes[6].imgs[0].src = data[6].isAwardUnlock ? 'raffle-award-20.png' : 'raffle-award-20-lock.png'
+      }
     },
     // 点击抽奖按钮会触发star回调
     startCallback () {
@@ -301,6 +313,8 @@ export default {
       // 展示奖品
       // 获取奖品信息
       this.queryRaffleAwardListHandle()
+      // 重新更新奖品
+      this.initPrize()
       // 抽奖完发送事件，更新抽奖额度、抽奖分数
       this.remainTimes = this.queryRemainTImes()
       this.flagEmit = false
