@@ -142,7 +142,7 @@ export default {
           }]
         },
         {
-          x: 2,
+          x: 0,
           y: 1,
           fonts: [{
             text: '4',
@@ -159,7 +159,7 @@ export default {
         },
         {
           x: 2,
-          y: 2,
+          y: 1,
           fonts: [{
             text: '5',
             top: '80%',
@@ -174,7 +174,7 @@ export default {
           }]
         },
         {
-          x: 1,
+          x: 0,
           y: 2,
           fonts: [{
             text: '6',
@@ -190,7 +190,7 @@ export default {
           }]
         },
         {
-          x: 0,
+          x: 1,
           y: 2,
           fonts: [{
             text: '7',
@@ -206,8 +206,8 @@ export default {
           }]
         },
         {
-          x: 0,
-          y: 1,
+          x: 2,
+          y: 2,
           fonts: [{
             text: '8',
             top: '80%',
