@@ -23,7 +23,7 @@
           @end="endCallback"
         />
         <div class="awardContent-container">
-          <el-button class="remainTimesClass2" @click="playRaffle">
+          <el-button class="remainTimesClass2" @click="playRaffle" :disabled="isRaffling">
             开始游戏 PLAY
           </el-button>
         </div>
@@ -243,7 +243,8 @@ export default {
           }]
         }
       ],
-      flagEmit: false// 用来判断是否发了抽奖结束事件的
+      flagEmit: false, // 用来判断是否发了抽奖结束事件的
+      isRaffling: false
     }
   },
   beforeMount () {
@@ -297,6 +298,7 @@ export default {
     },
     // 点击抽奖按钮会触发star回调
     playRaffle () {
+      this.isRaffling = true
       // 调用抽奖组件的play方法开始游戏
       this.$refs.myLucky.play()
       // 模拟调用接口异步抽奖
@@ -304,15 +306,15 @@ export default {
         // 假设后端返回的中奖索引是0
         // 抽奖接口
         this.randomRaffleHandle().then(prizeIndex => {
-            // 调用stop停止旋转并传递中奖索引
-            // 发送抽奖事件
-            if (!this.flagEmit) {
-              events.emit('drawOverEvent', prizeIndex)
-              events.emit('strategyRuleWeightRefresh', prizeIndex)
-              this.flagEmit = true
-            }
-            this.$refs.myLucky.stop(prizeIndex)
+          // 调用stop停止旋转并传递中奖索引
+          // 发送抽奖事件
+          if (!this.flagEmit) {
+            events.emit('drawOverEvent', prizeIndex)
+            events.emit('strategyRuleWeightRefresh', prizeIndex)
+            this.flagEmit = true
           }
+          this.$refs.myLucky.stop(prizeIndex)
+        }
         )
       }, 2000)
     },
@@ -325,6 +327,7 @@ export default {
       // 抽奖完发送事件，更新抽奖额度、抽奖分数
       this.remainTimes = this.queryRemainTImes()
       this.flagEmit = false
+      this.isRaffling = false
       alert('恭喜抽中奖品💐【' + prize.fonts[0].text + '】')
     },
     async randomRaffleHandle () {
